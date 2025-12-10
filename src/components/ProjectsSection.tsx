@@ -11,7 +11,8 @@ const projects = [
       "https://images.unsplash.com/photo-1723705027411-9bfc3c99c2e9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlY29tbWVyY2UlMjBzaG9wcGluZyUyMGFwcHxlbnwxfHx8fDE3NjUyNzg5NjZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
     tech: ["React", "Node.js", "MongoDB", "OpenAI", "Stripe"],
     github: "#",
-    demo: "fullstack-react-ecommerce-3wt6.vercel.app",
+    demo : "https://fullstack-react-ecommerce-3wt6.vercel.app",
+
   },
   {
     title: "Medical RAG Chatbot",
