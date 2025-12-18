@@ -52,7 +52,7 @@ const projects = [
       "https://images.unsplash.com/photo-1760992003923-ed5d455c1164?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaXNjdXNzaW9uJTIwZm9ydW0lMjBjb21tdW5pdHl8ZW58MXx8fHwxNzY1MzYyMDQ0fDA&ixlib=rb-4.1.0&q=80&w=1080",
     tech: ["React", "Node.js", "PostgreSQL", "Socket.io", "JWT"],
     github: "#",
-    demo: "#",
+    demo: "https://fullstack-react-ecommerce-2spl-9xgvvk1pu.vercel.app/",
   },
   {
     title: "Django Restaurant App",

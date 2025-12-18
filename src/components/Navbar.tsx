@@ -49,9 +49,7 @@ export function Navbar() {
         >
           <div className="flex items-center justify-between">
             <a href="#" className="flex items-center space-x-2">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-[#7B61FF] to-[#00E5FF] flex items-center justify-center">
-                <span className="text-white font-bold">MS</span>
-              </div>
+             
               <span className="hidden sm:block font-semibold">Muhammad Safwan</span>
             </a>
 
