@@ -44,7 +44,7 @@ const projects = [
     image: "https://plus.unsplash.com/premium_photo-1758204526484-8aab4982f214?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cmVzdGF1cmFudCUyMHJvYm90fGVufDB8fDB8fHww",
     tech: ["LangChain", "OpenAI API", "Flask", "TailwindCSS"],
     github: "https://github.com/MohammadSafwan97/Restaurant-Ai-Assistant",
-    demo: "https://chatbot-git-main-mohammadsafwan97s-projects.vercel.app/",
+    demo: "https://chatbot-coral-omega.vercel.app/ ",
     actions: { code: true, demo: true },
   },
   {
