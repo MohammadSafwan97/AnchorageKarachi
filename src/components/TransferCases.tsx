@@ -1,96 +1,98 @@
 import { useState } from 'react';
-import {
-  Plus,
-  Eye,
-  Edit,
-  MapPin,
-  Search,
-  FileText,
-  Printer,
-} from 'lucide-react';
+import { Plus, Eye, Edit } from 'lucide-react';
+
+/* ---------------- CONSTANTS ---------------- */
+
+const EXECUTION_TYPES = ['Full', 'Partial'];
+const LOCATIONS = ['Karachi', 'Islamabad', 'Gwadar', 'PN Farms'];
+const STATUSES = ['Completed', 'Pending', 'Hold'];
 
 /* ---------------- MOCK DATA ---------------- */
 
 const initialCases = [
   {
-    id: 'TC-2024-1248',
-    propertyLocation: 'Gwadar',
+    id: 'TC-2024-001',
+    date: '2024-12-15',
+    fileNo: 'FILE-7789',
+    sizeSqYd: '500',
     sellerName: 'Ahmed Hassan',
     purchaserName: 'Khalid Mehmood',
+    location: 'Karachi',
+    estateAgent: 'Al-Habib Property',
     status: 'Completed',
-    palNo: 'PAL-2024-0156',
-    letterNoDate: 'LTR-89 / 15-12-2024',
-    ndcNo: 'NDC-55678',
-    registrationNo: 'REG-2024-8899',
     cnic: '42101-1234567-1',
-    phone: '0301-1234567',
-    area: '500',
-    remarks: 'All documents verified',
-    documents: null, // ✅ PDF
+    executedOfficeName: 'Registrar Office Karachi',
+    executionType: 'Full',
+    authority: 'Sindh Board of Revenue',
+    propertyDealer: 'Al-Habib Property',
+    rateMillions: '12.5',
+    remarks: 'All documents verified.',
+    documents: null,
+    sellerImage: null,
+    purchaserImage: null,
   },
-   {
-    id: 'TC-2024-1248',
-    propertyLocation: 'Karachi',
+  {
+    id: 'TC-2024-002',
+    date: '2024-11-28',
+    fileNo: 'FILE-8891',
+    sizeSqYd: '300',
     sellerName: 'Naba Imran',
-    purchaserName: 'Khalid Mehmood',
-    status: 'Completed',
-    palNo: 'PAL-2024-0156',
-    letterNoDate: 'LTR-89 / 15-12-2024',
-    ndcNo: 'NDC-55678',
-    registrationNo: 'REG-2024-8899',
-    cnic: '42101-1234567-1',
-    phone: '0301-1234567',
-    area: '500',
-    remarks: 'All documents verified',
-    documents: null, // ✅ PDF
+    purchaserName: 'Usman Ali',
+    location: 'Islamabad',
+    estateAgent: 'Prime Estate',
+    status: 'Pending',
+    cnic: '42201-9876543-2',
+    executedOfficeName: 'Islamabad Land Office',
+    executionType: 'Partial',
+    authority: 'CDA',
+    propertyDealer: 'Prime Estate',
+    rateMillions: '8.2',
+    remarks: 'Partial transfer.',
+    documents: null,
+    sellerImage: null,
+    purchaserImage: null,
   },
-   {
-    id: 'TC-2024-1248',
-    propertyLocation: 'PN Farms',
-    sellerName: 'Shahzeb',
-    purchaserName: 'Khalid Mehmood',
+  {
+    id: 'TC-2024-003',
+    date: '2024-10-05',
+    fileNo: 'FILE-9912',
+    sizeSqYd: '1000',
+    sellerName: 'Shahzeb Khan',
+    purchaserName: 'Adeel Raza',
+    location: 'Gwadar',
+    estateAgent: 'Gwadar Properties',
     status: 'Completed',
-    palNo: 'PAL-2024-0156',
-    letterNoDate: 'LTR-89 / 15-12-2024',
-    ndcNo: 'NDC-55678',
-    registrationNo: 'REG-2024-8899',
-    cnic: '42101-1234567-1',
-    phone: '0301-1234567',
-    area: '500',
-    remarks: 'All documents verified',
-    documents: null, // ✅ PDF
+    cnic: '42301-4567890-3',
+    executedOfficeName: 'Gwadar Development Authority',
+    executionType: 'Full',
+    authority: 'GDA',
+    propertyDealer: 'Gwadar Properties',
+    rateMillions: '20',
+    remarks: 'Commercial plot.',
+    documents: null,
+    sellerImage: null,
+    purchaserImage: null,
   },
-   {
-    id: 'TC-2024-1248',
-    propertyLocation: 'Islamabad',
-    sellerName: 'Ahmed Hassan',
-    purchaserName: 'Khalid Mehmood',
-    status: 'Completed',
-    palNo: 'PAL-2024-0156',
-    letterNoDate: 'LTR-89 / 15-12-2024',
-    ndcNo: 'NDC-55678',
-    registrationNo: 'REG-2024-8899',
-    cnic: '42101-1234567-1',
-    phone: '0301-1234567',
-    area: '500',
-    remarks: 'All documents verified',
-    documents: null, // ✅ PDF
-  },
-   {
-    id: 'TC-2024-1248',
-    propertyLocation: 'Gwadar',
-    sellerName: 'Ahmed Hassan',
-    purchaserName: 'Khalid Mehmood',
-    status: 'Completed',
-    palNo: 'PAL-2024-0156',
-    letterNoDate: 'LTR-89 / 15-12-2024',
-    ndcNo: 'NDC-55678',
-    registrationNo: 'REG-2024-8899',
-    cnic: '42101-1234567-1',
-    phone: '0301-1234567',
-    area: '500',
-    remarks: 'All documents verified',
-    documents: null, // ✅ PDF
+  {
+    id: 'TC-2024-004',
+    date: '2024-09-18',
+    fileNo: 'FILE-5567',
+    sizeSqYd: '250',
+    sellerName: 'Bilal Ahmed',
+    purchaserName: 'Hamza Iqbal',
+    location: 'PN Farms',
+    estateAgent: 'City Estate',
+    status: 'Hold',
+    cnic: '42401-1112223-4',
+    executedOfficeName: 'Lahore Registry',
+    executionType: 'Full',
+    authority: 'LDA',
+    propertyDealer: 'City Estate',
+    rateMillions: '6.5',
+    remarks: 'On hold due to verification.',
+    documents: null,
+    sellerImage: null,
+    purchaserImage: null,
   },
 ];
 
@@ -103,40 +105,51 @@ export function TransferCases() {
 
   const [search, setSearch] = useState('');
   const [locationFilter, setLocationFilter] = useState('All');
-
-  const [showReport, setShowReport] = useState(false);
-  const [reportType, setReportType] = useState('summary');
+  const [agentFilter, setAgentFilter] = useState('All');
+  const [statusFilter, setStatusFilter] = useState('All');
 
   const emptyCase = {
     id: '',
-    propertyLocation: '',
+    date: '',
+    fileNo: '',
+    sizeSqYd: '',
     sellerName: '',
     purchaserName: '',
+    location: '',
+    estateAgent: '',
     status: 'Completed',
-    palNo: '',
-    letterNoDate: '',
-    ndcNo: '',
-    registrationNo: '',
     cnic: '',
-    phone: '',
-    area: '',
+    executedOfficeName: '',
+    executionType: '',
+    authority: '',
+    propertyDealer: '',
+    rateMillions: '',
     remarks: '',
-    documents: null, // ✅ PDF
+    documents: null,
+    sellerImage: null,
+    purchaserImage: null,
   };
 
   /* ---------- FILTER ---------- */
 
   const filteredCases = cases.filter(tc => {
+    const q = search.toLowerCase();
+
     const matchesSearch =
-      tc.id.toLowerCase().includes(search.toLowerCase()) ||
-      tc.sellerName.toLowerCase().includes(search.toLowerCase()) ||
-      tc.purchaserName.toLowerCase().includes(search.toLowerCase()) ||
-      tc.palNo.toLowerCase().includes(search.toLowerCase());
+      tc.id.toLowerCase().includes(q) ||
+      tc.sellerName.toLowerCase().includes(q) ||
+      tc.purchaserName.toLowerCase().includes(q);
 
     const matchesLocation =
-      locationFilter === 'All' || tc.propertyLocation === locationFilter;
+      locationFilter === 'All' || tc.location === locationFilter;
 
-    return matchesSearch && matchesLocation;
+    const matchesAgent =
+      agentFilter === 'All' || tc.estateAgent === agentFilter;
+
+    const matchesStatus =
+      statusFilter === 'All' || tc.status === statusFilter;
+
+    return matchesSearch && matchesLocation && matchesAgent && matchesStatus;
   });
 
   /* ---------- ACTIONS ---------- */
@@ -155,10 +168,6 @@ export function TransferCases() {
     setSelectedCase(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleFileChange = (file) => {
-    setSelectedCase(prev => ({ ...prev, documents: file }));
-  };
-
   const saveChanges = () => {
     if (mode === 'edit') {
       setCases(prev =>
@@ -166,7 +175,7 @@ export function TransferCases() {
       );
     }
     if (mode === 'add') {
-      setCases(prev => [...prev, selectedCase]);
+      setCases(prev => [...prev, { ...selectedCase, id: `TC-${Date.now()}` }]);
     }
     setSelectedCase(null);
     setMode(null);
@@ -176,53 +185,40 @@ export function TransferCases() {
     <div className="p-8 text-slate-900">
 
       {/* HEADER */}
-      <div className="flex justify-between mb-6">
-        <div>
-          <h1 className="text-xl font-semibold">Transfer Cases</h1>
-          <p className="text-slate-600">Manage and track property transfer cases</p>
-        </div>
-
-        <div className="flex gap-3">
-          <button
-            onClick={() => setShowReport(true)}
-            className="flex items-center gap-2 px-5 py-2 bg-slate-900 text-white rounded-lg"
-          >
-            <FileText className="w-4 h-4" />
-            Generate Report
-          </button>
-
-          <button
-            onClick={openAddCase}
-            className="flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-blue-900 to-teal-700 text-white rounded-lg"
-          >
-            <Plus className="w-4 h-4" />
-            Add New Case
-          </button>
-        </div>
+      <div className="flex justify-between mb-4">
+        <h1 className="text-xl font-semibold">Transfer Cases</h1>
+        <button
+          onClick={openAddCase}
+          className="bg-blue-900 text-white px-4 py-2 rounded-lg flex gap-2"
+        >
+          <Plus className="w-4 h-4" /> Add Case
+        </button>
       </div>
 
       {/* FILTERS */}
-      <div className="bg-white border rounded-xl p-4 flex gap-4 mb-6">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-3 w-4 h-4 text-slate-400" />
-          <input
-            placeholder="Search Case / Seller / Purchaser / PAL"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-2 border rounded-lg"
-          />
-        </div>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <input
+          placeholder="Search Case / Seller / Purchaser"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          className="border rounded-lg px-3 py-2"
+        />
 
-        <select
-          value={locationFilter}
-          onChange={e => setLocationFilter(e.target.value)}
-          className="px-4 py-2 border rounded-lg"
-        >
+        <select onChange={e => setLocationFilter(e.target.value)} className="border rounded-lg px-3 py-2">
           <option value="All">All Locations</option>
-          <option value="Gwadar">Gwadar</option>
-          <option value="Karachi">Karachi</option>
-          <option value="Islamabad">Islamabad</option>
-          <option value="PN Farms">PN Farms</option>
+          {LOCATIONS.map(l => <option key={l}>{l}</option>)}
+        </select>
+
+        <select onChange={e => setAgentFilter(e.target.value)} className="border rounded-lg px-3 py-2">
+          <option value="All">All Agents</option>
+          {[...new Set(cases.map(c => c.estateAgent))].map(a => (
+            <option key={a}>{a}</option>
+          ))}
+        </select>
+
+        <select onChange={e => setStatusFilter(e.target.value)} className="border rounded-lg px-3 py-2">
+          <option value="All">All Status</option>
+          {STATUSES.map(s => <option key={s}>{s}</option>)}
         </select>
       </div>
 
@@ -231,33 +227,37 @@ export function TransferCases() {
         <table className="w-full">
           <thead className="bg-slate-50 border-b">
             <tr>
-              {['Case No','Location','Seller','Purchaser','Status','Actions'].map(h => (
-                <th key={h} className="px-6 py-4 text-left">{h}</th>
-              ))}
+              <th className="px-6 py-4 text-left">Case No</th>
+              <th className="px-6 py-4 text-left">Seller</th>
+              <th className="px-6 py-4 text-left">Purchaser</th>
+              <th className="px-6 py-4 text-left">Location</th>
+              <th className="px-6 py-4 text-left">Estate Agent</th>
+              <th className="px-6 py-4 text-left">Status</th>
+              <th className="px-6 py-4 text-left">Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredCases.map(tc => (
-              <tr key={tc.id} className="border-b hover:bg-slate-50">
+              <tr key={tc.id} className="border-b">
                 <td className="px-6 py-4">{tc.id}</td>
-                <td className="px-6 py-4 flex gap-2">
-                  <MapPin className="w-4 h-4 text-slate-400" />
-                  {tc.propertyLocation}
-                </td>
                 <td className="px-6 py-4">{tc.sellerName}</td>
                 <td className="px-6 py-4">{tc.purchaserName}</td>
+                <td className="px-6 py-4">{tc.location}</td>
+                <td className="px-6 py-4">{tc.estateAgent}</td>
                 <td className="px-6 py-4">
-                  <span className="px-3 py-1 bg-teal-50 text-teal-700 rounded-full text-xs">
+                  <span className={`px-2 py-1 rounded text-xs ${
+                    tc.status === 'Completed'
+                      ? 'bg-green-100 text-green-700'
+                      : tc.status === 'Pending'
+                      ? 'bg-yellow-100 text-yellow-700'
+                      : 'bg-red-100 text-red-700'
+                  }`}>
                     {tc.status}
                   </span>
                 </td>
                 <td className="px-6 py-4 flex gap-2">
-                  <button onClick={() => openModal(tc,'view')} className="p-2 hover:bg-blue-50 rounded-lg">
-                    <Eye className="w-4 h-4 text-blue-900" />
-                  </button>
-                  <button onClick={() => openModal(tc,'edit')} className="p-2 hover:bg-slate-100 rounded-lg">
-                    <Edit className="w-4 h-4 text-slate-700" />
-                  </button>
+                  <button onClick={() => openModal(tc, 'view')}><Eye /></button>
+                  <button onClick={() => openModal(tc, 'edit')}><Edit /></button>
                 </td>
               </tr>
             ))}
@@ -267,42 +267,102 @@ export function TransferCases() {
 
       {/* MODAL */}
       {selectedCase && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl w-full max-w-3xl p-6 max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/60 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto mx-4">
 
             <h2 className="font-semibold mb-4">
-              {mode === 'view' ? 'View Case' : mode === 'edit' ? 'Edit Case' : 'Add New Case'}
+              {mode === 'view' ? 'View Case' : mode === 'edit' ? 'Edit Case' : 'Add Case'}
             </h2>
 
-            <div className="grid grid-cols-2 gap-4">
-              {Object.keys(emptyCase).filter(k => k !== 'remarks' && k !== 'documents').map(key => (
-                <Input
-                  key={key}
-                  label={key}
-                  value={selectedCase[key]}
-                  disabled={mode === 'view'}
-                  onChange={v => handleChange(key, v)}
-                />
-              ))}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
-              {/* ✅ PDF UPLOAD */}
-              <div className="col-span-2">
-                <label className="text-sm text-slate-600">Upload Scanned Documents (PDF)</label>
+              <ImageField label="Seller Image" file={selectedCase.sellerImage}
+                disabled={mode === 'view'}
+                onChange={file => handleChange('sellerImage', file)} />
+
+              <ImageField label="Purchaser Image" file={selectedCase.purchaserImage}
+                disabled={mode === 'view'}
+                onChange={file => handleChange('purchaserImage', file)} />
+
+              <Input label="Date" type="date" value={selectedCase.date} disabled={mode === 'view'}
+                onChange={v => handleChange('date', v)} />
+
+              <Input label="File No" value={selectedCase.fileNo} disabled={mode === 'view'}
+                onChange={v => handleChange('fileNo', v)} />
+
+              <Input label="Size (Sq Yd)" value={selectedCase.sizeSqYd} disabled={mode === 'view'}
+                onChange={v => handleChange('sizeSqYd', v)} />
+
+              <Input label="Seller" value={selectedCase.sellerName} disabled={mode === 'view'}
+                onChange={v => handleChange('sellerName', v)} />
+
+              <Input label="Purchaser" value={selectedCase.purchaserName} disabled={mode === 'view'}
+                onChange={v => handleChange('purchaserName', v)} />
+
+              <Input label="CNIC No" value={selectedCase.cnic} disabled={mode === 'view'}
+                onChange={v => handleChange('cnic', v)} />
+
+              <Input label="Executed Office Name" value={selectedCase.executedOfficeName} disabled={mode === 'view'}
+                onChange={v => handleChange('executedOfficeName', v)} />
+
+              <SelectField
+                label="Full / Partial"
+                value={selectedCase.executionType}
+                options={EXECUTION_TYPES}
+                disabled={mode === 'view'}
+                onChange={v => handleChange('executionType', v)}
+              />
+
+              <SelectField
+                label="Location"
+                value={selectedCase.location}
+                options={LOCATIONS}
+                disabled={mode === 'view'}
+                onChange={v => handleChange('location', v)}
+              />
+
+              <SelectField
+                label="Status"
+                value={selectedCase.status}
+                options={STATUSES}
+                disabled={mode === 'view'}
+                onChange={v => handleChange('status', v)}
+              />
+
+              <Input label="Authority" value={selectedCase.authority} disabled={mode === 'view'}
+                onChange={v => handleChange('authority', v)} />
+
+              <Input label="Estate Agent" value={selectedCase.estateAgent} disabled={mode === 'view'}
+                onChange={v => handleChange('estateAgent', v)} />
+
+              <Input label="Property Dealer" value={selectedCase.propertyDealer} disabled={mode === 'view'}
+                onChange={v => handleChange('propertyDealer', v)} />
+
+              <Input label="Rate (Rs Millions)" value={selectedCase.rateMillions} disabled={mode === 'view'}
+                onChange={v => handleChange('rateMillions', v)} />
+
+              
+
+              <div className="md:col-span-2">
+                <label className="text-sm text-slate-600">Scanned Documents (PDF)</label>
                 {mode === 'view' ? (
-                  <div className="mt-1 text-sm">
-                    {selectedCase.documents ? selectedCase.documents.name : 'No document uploaded'}
-                  </div>
+                  selectedCase.documents ? (
+                    <button
+                      onClick={() => window.open(URL.createObjectURL(selectedCase.documents))}
+                      className="text-blue-700 underline text-sm"
+                    >
+                      View Document
+                    </button>
+                  ) : (
+                    <p className="text-sm text-slate-500">No document uploaded</p>
+                  )
                 ) : (
-                  <input
-                    type="file"
-                    accept="application/pdf"
-                    onChange={e => handleFileChange(e.target.files[0])}
-                    className="w-full mt-1 border rounded-lg px-3 py-2"
-                  />
+                  <input type="file" accept="application/pdf"
+                    onChange={e => handleChange('documents', e.target.files[0])} />
                 )}
               </div>
 
-              <div className="col-span-2">
+              <div className="md:col-span-2">
                 <label className="text-sm text-slate-600">Remarks</label>
                 <textarea
                   disabled={mode === 'view'}
@@ -323,25 +383,7 @@ export function TransferCases() {
                 </button>
               )}
             </div>
-          </div>
-        </div>
-      )}
 
-      {/* REPORT MODAL (unchanged) */}
-      {showReport && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl w-full max-w-4xl p-6">
-            <div className="flex justify-between mb-4">
-              <h2 className="font-semibold">Transfer Cases Report</h2>
-              <button onClick={() => setShowReport(false)}>✕</button>
-            </div>
-
-            <button
-              onClick={() => window.print()}
-              className="flex items-center gap-2 border px-4 py-2 rounded-lg mb-4"
-            >
-              <Printer className="w-4 h-4" /> Print
-            </button>
           </div>
         </div>
       )}
@@ -351,16 +393,51 @@ export function TransferCases() {
 
 /* ---------------- SMALL COMPONENTS ---------------- */
 
-function Input({ label, value, onChange, disabled }) {
+function Input({ label, value, onChange, disabled, type = 'text' }) {
   return (
     <div>
-      <label className="text-sm text-slate-600 capitalize">{label}</label>
+      <label className="text-sm text-slate-600">{label}</label>
       <input
+        type={type}
         disabled={disabled}
         value={value}
         onChange={e => onChange(e.target.value)}
         className="w-full mt-1 border rounded-lg px-3 py-2"
       />
+    </div>
+  );
+}
+
+function SelectField({ label, value, options, onChange, disabled }) {
+  return (
+    <div>
+      <label className="text-sm text-slate-600">{label}</label>
+      <select
+        disabled={disabled}
+        value={value}
+        onChange={e => onChange(e.target.value)}
+        className="w-full mt-1 border rounded-lg px-3 py-2"
+      >
+        <option value="">Select</option>
+        {options.map(o => <option key={o}>{o}</option>)}
+      </select>
+    </div>
+  );
+}
+
+function ImageField({ label, file, onChange, disabled }) {
+  return (
+    <div>
+      <label className="text-sm text-slate-600">{label}</label>
+      {disabled ? (
+        file ? (
+          <img src={URL.createObjectURL(file)} className="mt-2 h-24 rounded border" />
+        ) : (
+          <p className="text-sm text-slate-500 mt-1">No image uploaded</p>
+        )
+      ) : (
+        <input type="file" accept="image/*" onChange={e => onChange(e.target.files[0])} />
+      )}
     </div>
   );
 }
