@@ -1,27 +1,73 @@
-import { Navbar } from './components/Navbar';
-import { HeroSection } from './components/HeroSection';
-import { AboutSection } from './components/AboutSection';
-import { ProjectsSection } from './components/ProjectsSection';
-import { CertificationsSection } from './components/CertificationsSection';
-import { EducationSection } from './components/EducationSection';
-import { ContactSection } from './components/ContactSection';
-import { Footer } from './components/Footer';
+import { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router';
+
+import { LoginPage } from './components/LoginPage';
+import { DashboardLayout } from './components/DashboardLayout';
+import { MainDashboard } from './components/MainDashboard';
+import { TransferCases } from './components/TransferCases';
+import { AnchorageKarachiGallery } from './components/AnchorageKarachiGallery';
+import { PALManagement } from './components/PALManagement';
+import { PAOManagement } from './components/PAOManagement';
+import { NDCNOCRecords } from './components/NDCNOCRecords';
+import { EstateAgents } from './components/EstateAgents';
+import { Employees } from './components/Employees';
+import { Attendance } from './components/Attendance';
+import { ConstructionProjects } from './components/ConstructionProjects';
+import { Reports } from './components/Reports';
+import { Settings } from './components/Settings';
 
 export default function App() {
-  return (
-    <div className="min-h-screen bg-[#0C1120] text-[#F1F5F9]">
-      <Navbar />
-      
-      <main>
-        <HeroSection />
-        <AboutSection />
-        <ProjectsSection />
-        <CertificationsSection />
-        <EducationSection />
-        <ContactSection />
-      </main>
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-      <Footer />
-    </div>
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+  };
+
+  return (
+    <Router>
+      <Routes>
+        {/* Login Route */}
+        <Route
+          path="/login"
+          element={
+            !isAuthenticated ? (
+              <LoginPage onLogin={handleLogin} />
+            ) : (
+              <Navigate to="/dashboard" replace />
+            )
+          }
+        />
+
+        {/* Protected Routes */}
+        <Route
+          path="/"
+          element={
+            isAuthenticated ? (
+              <DashboardLayout onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        >
+          <Route index element={<Navigate to="/dashboard" replace />} />
+          <Route path="dashboard" element={<MainDashboard />} />
+          <Route path="transfer-cases" element={<TransferCases />} />
+          <Route path="property-records" element={<AnchorageKarachiGallery />} />
+          <Route path="pal-management" element={<PALManagement />} />
+          <Route path="pao-management" element={<PAOManagement />} />
+          <Route path="ndc-noc-records" element={<NDCNOCRecords />} />
+          <Route path="estate-agents" element={<EstateAgents />} />
+          <Route path="employees" element={<Employees />} />
+          <Route path="attendance" element={<Attendance />} />
+          <Route path="construction-projects" element={<ConstructionProjects />} />
+          <Route path="reports" element={<Reports />} />
+          <Route path="settings" element={<Settings />} />
+        </Route>
+      </Routes>
+    </Router>
   );
 }
