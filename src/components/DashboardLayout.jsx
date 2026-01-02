@@ -34,6 +34,7 @@ const navItems = [
   { path: '/property-records', icon: Building, label: 'Gallery' },
   { path: '/reports', icon: BarChart3, label: 'Reports' },
   { path: '/settings', icon: SettingsIcon, label: 'Settings' },
+  { path: '/chatbot', icon: SettingsIcon, label: 'Help' },
 ];
 
 export function DashboardLayout({ onLogout }) {

@@ -57,6 +57,7 @@ export function Attendance() {
   const [attendance, setAttendance] = useState(initialAttendance);
   const [selectedDate, setSelectedDate] = useState('2024-12-29');
   const [showReport, setShowReport] = useState(false);
+  const [showDailyState, setShowDailyState] = useState(false);
   const [editRecord, setEditRecord] = useState(null);
 
   /* ---------- Late Logic (08:15 AM) ---------- */
@@ -73,7 +74,6 @@ export function Attendance() {
   const absent = attendance.filter(a => a.status === 'Absent');
   const late = present.filter(a => isLate(a.checkIn));
 
-  /* ---------- SAVE EDIT ---------- */
   const saveEdit = () => {
     setAttendance(prev =>
       prev.map(r =>
@@ -84,7 +84,42 @@ export function Attendance() {
   };
 
   return (
-    <div className="p-8">
+    <div className="p-8"><style>{`
+  @media print {
+    body {
+      background: white !important;
+      color: #000 !important;
+    }
+
+    .print-grid {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 16px !important;
+      break-inside: avoid;
+    }
+
+    table {
+      font-size: 12px;
+      border-collapse: collapse;
+    }
+
+    th {
+      background-color: #f1f5f9 !important;
+      color: #000 !important;
+      font-weight: 600;
+    }
+
+    td {
+      color: #000 !important;
+    }
+
+    h2, h3 {
+      color: #000 !important;
+    }
+  }
+`}</style>
+
+
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-slate-900 mb-2">Attendance Management</h1>
@@ -111,12 +146,20 @@ export function Attendance() {
           onChange={(e) => setSelectedDate(e.target.value)}
           className="px-4 py-2 border rounded-lg text-slate-900"
         />
+
         <button
           onClick={() => setShowReport(true)}
           className="ml-auto px-6 py-2 bg-gradient-to-r from-blue-900 to-teal-700 text-white rounded-lg flex items-center gap-2"
         >
           <FileText className="w-4 h-4" />
           Generate Report
+        </button>
+
+        <button
+          onClick={() => setShowDailyState(true)}
+          className="px-6 py-2 bg-gradient-to-r from-emerald-900 to-teal-700 text-white rounded-lg"
+        >
+          Daily State
         </button>
       </div>
 
@@ -136,16 +179,16 @@ export function Attendance() {
           <tbody>
             {attendance.map((r) => (
               <tr key={r.employeeId} className="border-b hover:bg-slate-50">
-                <td className="px-6 py-4 text-slate-700">{r.employeeId}</td>
-                <td className="px-6 py-4 text-slate-900">{r.employeeName}</td>
-                <td className="px-6 py-4 text-slate-600">{r.department}</td>
-                <td className="px-6 py-4 text-slate-600">{r.checkIn || '-'}</td>
-                <td className="px-6 py-4 text-slate-600">{r.checkOut || '-'}</td>
-                <td className="px-6 py-4 text-slate-700">{r.status}</td>
+                <td className="px-6 py-4">{r.employeeId}</td>
+                <td className="px-6 py-4">{r.employeeName}</td>
+                <td className="px-6 py-4">{r.department}</td>
+                <td className="px-6 py-4">{r.checkIn || '-'}</td>
+                <td className="px-6 py-4">{r.checkOut || '-'}</td>
+                <td className="px-6 py-4">{r.status}</td>
                 <td className="px-6 py-4">
                   <button
                     onClick={() => setEditRecord({ ...r })}
-                    className="px-4 py-2 text-sm border text-slate-700 rounded-lg hover:bg-slate-50"
+                    className="px-4 py-2 text-sm border rounded-lg"
                   >
                     Edit
                   </button>
@@ -156,198 +199,203 @@ export function Attendance() {
         </table>
       </div>
 
-      {/* EDIT MODAL */}
-      {editRecord && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-md text-slate-900">
-            <h2 className="mb-4">Edit Attendance</h2>
-
-            <div className="space-y-4">
-              <div>
-                <label className="text-sm">Status</label>
-                <select
-                  value={editRecord.status}
-                  onChange={(e) =>
-                    setEditRecord({ ...editRecord, status: e.target.value })
-                  }
-                  className="w-full border rounded-lg px-3 py-2"
-                >
-                  <option>Present</option>
-                  <option>Absent</option>
-                  <option>Leave</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="text-sm">Check In</label>
-                <input
-                  value={editRecord.checkIn || ''}
-                  onChange={(e) =>
-                    setEditRecord({ ...editRecord, checkIn: e.target.value })
-                  }
-                  className="w-full border rounded-lg px-3 py-2"
-                />
-              </div>
-
-              <div>
-                <label className="text-sm">Check Out</label>
-                <input
-                  value={editRecord.checkOut || ''}
-                  onChange={(e) =>
-                    setEditRecord({ ...editRecord, checkOut: e.target.value })
-                  }
-                  className="w-full border rounded-lg px-3 py-2"
-                />
-              </div>
-            </div>
-
-            <div className="flex justify-end gap-3 mt-6">
-              <button
-                onClick={() => setEditRecord(null)}
-                className="px-4 py-2 border rounded-lg"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={saveEdit}
-                className="px-4 py-2 bg-blue-900 text-white rounded-lg"
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* REPORT MODAL (unchanged) */}
-     {/* REPORT MODAL */}
-{showReport && (
+      {/* ================= DAILY STATE REPORT ================= */}
+      {showDailyState && (
   <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-    <div className="bg-white text-slate-900 rounded-xl p-6 w-full max-w-5xl max-h-[90vh] overflow-auto">
+    <div className="bg-white text-slate-900 rounded-xl shadow-xl p-6 w-full max-w-6xl max-h-[90vh] overflow-auto">
+
 
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold">
-          Attendance Report — {selectedDate}
-        </h2>
-        <button onClick={() => setShowReport(false)}>✕</button>
+       <h2 className="text-lg font-semibold tracking-wide text-slate-900">
+  Daily State CPO / Sailor Civilians — Dated {selectedDate}
+</h2>
+
+        <button
+          onClick={() => setShowDailyState(false)}
+          className="text-slate-700"
+        >
+          ✕
+        </button>
       </div>
 
       {/* Actions */}
-      <div className="flex justify-end gap-3 mb-6">
+      <div className="flex justify-end mb-6">
         <button
           onClick={() => window.print()}
-          className="flex items-center gap-2 px-4 py-2 border rounded-lg text-slate-700 hover:bg-slate-50"
+          className="flex items-center gap-2 px-4 py-2 border rounded-lg text-slate-900"
         >
           <Printer className="w-4 h-4" />
           Print
         </button>
       </div>
 
-      {/* SUMMARY */}
-      <div className="grid grid-cols-4 gap-4 mb-8">
-        <Summary label="Total Employees" value={attendance.length} />
-        <Summary label="Present" value={present.length} />
-        <Summary label="Absent" value={absent.length} />
-        <Summary label="Late Arrivals" value={late.length} />
-      </div>
+      {/* ================= TABLE 1 ================= */}
+      <h1 className="font-semibold mb-2 text-slate-900">
+        Daily State Summary
+      </h1>
 
-     
-
-      {/* ABSENT */}
-      {absent.length > 0 && (
-        <div className="mb-6">
-          <h3 className="mb-3 text-slate-900 font-semibold">
-            Absent Employees
-          </h3>
-          <table className="w-full border rounded-lg">
-            <thead className="bg-slate-100">
-              <tr>
-                <th className="border px-4 py-2 text-left">Employee ID</th>
-                <th className="border px-4 py-2 text-left">Name</th>
-                <th className="border px-4 py-2 text-left">Department</th>
-              </tr>
-            </thead>
-            <tbody>
-              {absent.map(emp => (
-                <tr key={emp.employeeId}>
-                  <td className="border px-4 py-2">{emp.employeeId}</td>
-                  <td className="border px-4 py-2">{emp.employeeName}</td>
-                  <td className="border px-4 py-2">{emp.department}</td>
-                </tr>
+      <table className="w-full border mb-8 text-slate-900">
+        <thead className="bg-slate-100">
+          <tr>
+            {[
+              'Category','Born','Present','Away','AK DET',
+              'AK Office','Leave','TY','Absent','Admit'
+            ].map(h => (
+              <th key={h} className="border px-3 py-2 text-left">
+                {h}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {[
+            { cat: 'G/Navy', data: [15, 5, 3, 2, 1, 1, 0, 3, 0] },
+            { cat: 'Marines', data: [15, 5, 2, 1, 1, 0, 0, 1, 0] },
+            { cat: 'Civilians', data: [15, 2, 1, 1, 1, 1, 0, 1, 0] },
+            { cat: 'Total', data: [20, 10, 6, 4, 3, 2, 0, 5, 0] },
+          ].map(row => (
+            <tr key={row.cat}>
+              <td className="border px-3 py-2 font-medium">
+                {row.cat}
+              </td>
+              {row.data.map((v,i) => (
+                <td key={i} className="border px-3 py-2 text-center">
+                  {v}
+                </td>
               ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
-      {/* LEAVE */}
-      {attendance.filter(a => a.status === 'Leave').length > 0 && (
-        <div className="mb-6">
-          <h3 className="mb-3 text-slate-900 font-semibold">
-            Employees on Leave
+      {/* ================= TABLE 2 ================= */}
+      <h3 className="font-semibold mb-2 text-slate-900">AK DET</h3>
+      <table className="w-full border mb-8 text-slate-900">
+        <thead className="bg-slate-100">
+          <tr>
+            {['S.No','PJO/O No','Name','Rank/Rate','W.E.F'].map(h => (
+              <th key={h} className="border px-3 py-2 text-left">{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {[
+            { no: 1, pjo: '202311', name: 'Ahmed Raza', rank: 'PMT-I' },
+            { no: 2, pjo: '202312', name: 'Bilal Khan', rank: 'LPMT' },
+          ].map(r => (
+            <tr key={r.no}>
+              <td className="border px-3 py-2">{r.no}</td>
+              <td className="border px-3 py-2">{r.pjo}</td>
+              <td className="border px-3 py-2">{r.name}</td>
+              <td className="border px-3 py-2">{r.rank}</td>
+              <td className="border px-3 py-2">{selectedDate}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* ================= TABLE 3 & 4 ================= */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 print-grid">
+
+
+        {/* Uniform */}
+        <div>
+          <h3 className="font-semibold mb-2 text-slate-900">
+            AK Office Uniform Personnel
           </h3>
-          <table className="w-full border rounded-lg">
+          <table className="w-full border text-slate-900">
             <thead className="bg-slate-100">
               <tr>
-                <th className="border px-4 py-2 text-left">Employee ID</th>
-                <th className="border px-4 py-2 text-left">Name</th>
-                <th className="border px-4 py-2 text-left">Department</th>
-              </tr>
-            </thead>
-            <tbody>
-              {attendance
-                .filter(a => a.status === 'Leave')
-                .map(emp => (
-                  <tr key={emp.employeeId}>
-                    <td className="border px-4 py-2">{emp.employeeId}</td>
-                    <td className="border px-4 py-2">{emp.employeeName}</td>
-                    <td className="border px-4 py-2">{emp.department}</td>
-                  </tr>
+                {['S.No','PJO/O.No','Name','Rank/Rate','Remarks'].map(h => (
+                  <th key={h} className="border px-3 py-2 text-left">{h}</th>
                 ))}
-            </tbody>
-          </table>
-        </div>
-      )}
-
-      {/* LATE */}
-      {late.length > 0 && (
-        <div className="mb-6">
-          <h3 className="mb-3 text-slate-900 font-semibold">
-            Late Arrivals
-          </h3>
-          <table className="w-full border rounded-lg">
-            <thead className="bg-slate-100">
-              <tr>
-                <th className="border px-4 py-2 text-left">Employee ID</th>
-                <th className="border px-4 py-2 text-left">Name</th>
-                <th className="border px-4 py-2 text-left">Department</th>
-                <th className="border px-4 py-2 text-left">Check In</th>
               </tr>
             </thead>
             <tbody>
-              {late.map(emp => (
-                <tr key={emp.employeeId}>
-                  <td className="border px-4 py-2">{emp.employeeId}</td>
-                  <td className="border px-4 py-2">{emp.employeeName}</td>
-                  <td className="border px-4 py-2">{emp.department}</td>
-                  <td className="border px-4 py-2">{emp.checkIn}</td>
-                </tr>
-              ))}
+              <tr>
+                <td className="border px-3 py-2">1</td>
+                <td className="border px-3 py-2">202401</td>
+                <td className="border px-3 py-2">Usman Ali</td>
+                <td className="border px-3 py-2">MGT-I</td>
+                <td className="border px-3 py-2">On Duty</td>
+              </tr>
             </tbody>
           </table>
         </div>
-      )}
 
-      {/* Footer */}
-      <div className="flex justify-end mt-6">
-        <button
-          onClick={() => setShowReport(false)}
-          className="px-6 py-2 bg-blue-900 text-white rounded-lg"
-        >
-          Close
-        </button>
+        {/* Civilians */}
+        <div>
+          <h3 className="font-semibold mb-2 text-slate-900">
+            AK Office Civilians
+          </h3>
+          <table className="w-full border text-slate-900">
+            <thead className="bg-slate-100">
+              <tr>
+                {['S.No','P.No','Name','Desig','Remarks'].map(h => (
+                  <th key={h} className="border px-3 py-2 text-left">{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border px-3 py-2">1</td>
+                <td className="border px-3 py-2">C-019</td>
+                <td className="border px-3 py-2">Safwan</td>
+                <td className="border px-3 py-2">DEO</td>
+                <td className="border px-3 py-2">Present</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
       </div>
+
+      {/* ================= TABLE 5 ================= */}
+      <h3 className="font-semibold mb-2 text-slate-900">Leave</h3>
+      <table className="w-full border border-slate-300 rounded-lg overflow-hidden text-slate-900">
+
+        <thead className="bg-slate-100">
+          <tr>
+            {['S.No','O.No','Name','Rank/Rate','Days','W.E.F','UPTO'].map(h => (
+              <th key={h} className="border px-3 py-2 text-left">{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="border px-3 py-2">1</td>
+            <td className="border px-3 py-2">203311</td>
+            <td className="border px-3 py-2">Shahzeb</td>
+            <td className="border px-3 py-2">PMT-I</td>
+            <td className="border px-3 py-2">3</td>
+            <td className="border px-3 py-2">{selectedDate}</td>
+            <td className="border px-3 py-2">2024-12-31</td>
+          </tr>
+        </tbody>
+      </table>
+
+      {/* ================= TABLE 6 ================= */}
+      <h3 className="font-semibold mb-2 text-slate-900">TY</h3>
+      <table className="w-full border text-slate-900">
+        <thead className="bg-slate-100">
+          <tr>
+            {['S.No','Name','Rank/Rate','W.E.F','Remarks'].map(h => (
+              <th key={h} className="border px-3 py-2 text-left">{h}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="border px-3 py-2">1</td>
+            <td className="border px-3 py-2">Bilal Khan</td>
+            <td className="border px-3 py-2">LPMT</td>
+            <td className="border px-3 py-2">{selectedDate}</td>
+            <td className="border px-3 py-2">Temporary Duty</td>
+          </tr>
+        </tbody>
+      </table>
+
     </div>
   </div>
 )}
@@ -364,17 +412,29 @@ function StatCard({ label, value, icon: Icon, color }) {
       <div className={`w-10 h-10 bg-${color}-600 rounded-lg flex items-center justify-center mb-2`}>
         <Icon className="w-5 h-5 text-white" />
       </div>
-      <div className="text-slate-600 text-sm">{label}</div>
+      <div className="text-sm text-slate-600">{label}</div>
       <div className="text-slate-900">{value}</div>
     </div>
   );
 }
 
-function Summary({ label, value }) {
+function SimpleTable({ headers }) {
   return (
-    <div className="border rounded-lg p-4 bg-slate-50">
-      <div className="text-xs text-slate-500">{label}</div>
-      <div className="text-slate-900">{value}</div>
-    </div>
+    <table className="w-full border mb-6">
+      <thead className="bg-slate-100">
+        <tr>
+          {headers.map(h => (
+            <th key={h} className="border px-3 py-2">{h}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          {headers.map((_,i) => (
+            <td key={i} className="border px-3 py-2">—</td>
+          ))}
+        </tr>
+      </tbody>
+    </table>
   );
 }

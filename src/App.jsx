@@ -14,6 +14,7 @@ import { Employees } from './components/Employees';
 import { Attendance } from './components/Attendance';
 import { ConstructionProjects } from './components/ConstructionProjects';
 import { Reports } from './components/Reports';
+import { Chatbot } from './components/Chatbot';
 import { Settings } from './components/Settings';
 
 export default function App() {
@@ -66,6 +67,7 @@ export default function App() {
           <Route path="construction-projects" element={<ConstructionProjects />} />
           <Route path="reports" element={<Reports />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="chatbot" element={<Chatbot />} />
         </Route>
       </Routes>
     </Router>

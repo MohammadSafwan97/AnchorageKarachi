@@ -5,7 +5,7 @@ import { Plus, Eye, Edit } from 'lucide-react';
 
 const EXECUTION_TYPES = ['Full', 'Partial'];
 const LOCATIONS = ['Karachi', 'Islamabad', 'Gwadar', 'PN Farms'];
-const STATUSES = ['Completed', 'Pending', 'Hold'];
+const STATUSES = ['Forwarded', 'Action Awaited'];
 
 /* ---------------- MOCK DATA ---------------- */
 
@@ -283,22 +283,34 @@ export function TransferCases() {
               <ImageField label="Purchaser Image" file={selectedCase.purchaserImage}
                 disabled={mode === 'view'}
                 onChange={file => handleChange('purchaserImage', file)} />
+              <Input
+  label="Inward No"
+  value={selectedCase.inwardNo}
+  disabled={mode === 'view'}
+  onChange={v => handleChange('inwardNo', v)}
+/>
 
-              <Input label="Date" type="date" value={selectedCase.date} disabled={mode === 'view'}
-                onChange={v => handleChange('date', v)} />
+<Input
+  label="Inward Date"
+  type="date"
+  value={selectedCase.inwardDate}
+  disabled={mode === 'view'}
+  onChange={v => handleChange('inwardDate', v)}
+/>
+              
 
-              <Input label="File No" value={selectedCase.fileNo} disabled={mode === 'view'}
+              <Input label="Registration No" value={selectedCase.fileNo} disabled={mode === 'view'}
                 onChange={v => handleChange('fileNo', v)} />
 
-              <Input label="Size (Sq Yd)" value={selectedCase.sizeSqYd} disabled={mode === 'view'}
-                onChange={v => handleChange('sizeSqYd', v)} />
+              
 
               <Input label="Seller" value={selectedCase.sellerName} disabled={mode === 'view'}
                 onChange={v => handleChange('sellerName', v)} />
 
               <Input label="Purchaser" value={selectedCase.purchaserName} disabled={mode === 'view'}
                 onChange={v => handleChange('purchaserName', v)} />
-
+              <Input label="Size (Sq Yd)" value={selectedCase.sizeSqYd} disabled={mode === 'view'}
+                onChange={v => handleChange('sizeSqYd', v)} />
               <Input label="CNIC No" value={selectedCase.cnic} disabled={mode === 'view'}
                 onChange={v => handleChange('cnic', v)} />
 
